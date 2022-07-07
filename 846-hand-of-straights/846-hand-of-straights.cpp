@@ -12,12 +12,16 @@ public:
             m[card]++;
         }
         
-        for(auto it: m){
-            int card = it.first;
-            while(it.second-- > 0){
-                for(int i = 1; i < groupSize; i++){
-                    if(m.find(card + i) == m.end() || m[card + i]-- == 0) return false;
+        while(!m.empty()){
+            int curr  = m.begin()->first;
+            for(int i = 0; i < groupSize; i++){
+                if(m.find(curr + i) == m.end()){
+                    return false;
                 }
+                if(--m[curr + i] < 1){
+                    m.erase(curr + i);
+                }
+                
             }
         }
         return true;
