@@ -6,22 +6,14 @@ public:
         sort(intervals.begin(), intervals.end());
         
         int count = 0;
-        
-        int l = 0, r = 1;
-        
-        while(r < intervals.size()){
-            if(intervals[l][1] <= intervals[r][0]){
-                l = r;
-                r++;
-            }
-            else if(intervals[l][1] > intervals[r][1]){
-                count++;
-                l = r;
-                r++;
+        int prev_End = intervals[0][1];
+        for(int i = 1; i < intervals.size(); i++){
+            if(prev_End <= intervals[i][0]){
+                prev_End = intervals[i][1];
             }
             else{
+                prev_End = min(prev_End, intervals[i][1]);
                 count++;
-                r++;
             }
         }
         return count;
