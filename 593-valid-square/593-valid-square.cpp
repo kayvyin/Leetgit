@@ -19,6 +19,6 @@ public:
                 }
             }
         }
-        return hash.size() == 2;
+        return true;
     }
 };
