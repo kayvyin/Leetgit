@@ -1,28 +1,26 @@
 class Solution {
 public:
-    int valid(vector<int>& ribbons, int k, int len)
-    {
-        int cuts = 0;
-        for(int i = 0 ; i < ribbons.size() ; ++i)
-            cuts += ribbons[i] / len;
-    
-        return cuts >= k ;
-    }
     int maxLength(vector<int>& ribbons, int k) {
-        int n = ribbons.size(), mx = INT_MIN;
+        int shortest = 1;
+        int longest = INT_MIN;
         
-        for(int it : ribbons)
-            mx = max(mx,it);
-        
-        int l = 1 , r = mx;
-        while(l <= r)
-        {
-            int mid = l + ( r - l ) / 2;
-            if(valid(ribbons, k , mid) )
-                l = mid + 1;
-            else 
-                r = mid - 1;
+        for(int n : ribbons){
+            longest = max(longest, n);
         }
-        return r;
+        int num_ribbons;
+        while(shortest <= longest){
+            int guess = shortest + (longest - shortest) / 2;
+            num_ribbons = 0;
+            for(int n : ribbons){
+                num_ribbons += n / guess;
+            }
+            if(num_ribbons >= k){
+                shortest = guess + 1;
+            }
+            else{
+                longest = guess - 1;
+            }
+        }
+        return longest;
     }
 };
