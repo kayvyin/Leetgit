@@ -7,7 +7,6 @@ public:
             return min(cost[0], cost[1]);
         }
         
-        vector<int> dp(n);
         
         int down1 = 0;
         int down2 = 0;
