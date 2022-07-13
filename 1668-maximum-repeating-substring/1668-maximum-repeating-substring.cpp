@@ -6,45 +6,53 @@ public:
         int wl = w.length();
         int sl = s.length();
         
+        string w2 = w;
         // build up word and preprocess LPS
-        while(w.size() < sl)w+=w;
+        while(w2.size() < sl)w2+=w;
         
-        vector<int>lps(w.length());
+        vector<int>lps(w2.length(), 0);
         lps[0] = 0;
         
         int i = 1;
-        int j = 0;
-        while(i < w.length())
-        {
-            if(w[i]==w[j])lps[i++]=++j;
-            else
-            {
-                if(j==0)lps[i++]=0;
-                else j = lps[j-1];
+        int prev_lps = 0;
+        while(i < w2.length()){
+            if(w2[i] == w2[prev_lps]){
+                lps[i++] = ++prev_lps;
+            }
+            else{
+                if(prev_lps == 0){
+                    prev_lps = 0;
+                    i++;
+                }
+                else{
+                    prev_lps = lps[prev_lps - 1]; 
+                }
             }
         }
         
-        // run KMP over updated word and sequence string
         i = 0;
-        j = 0;
-        int maxc = 0;
-        while(i < sl)
-        {
-            if(s[i]==w[j])i++,++j;
-            else
-            {
-                if(j==0)i++;
-                else j = lps[j-1];
-            }
-            
-
-            // word pointer divisible by original word length and so is a repeated substring
-            // repeat count => j / word length and track the max repeat
-            if((j%wl)==0)
-                maxc = max(maxc,j/wl);
-        }
+        prev_lps = 0;
         
-        // return max repeat count
-        return maxc;        
+        int ans = 0;
+        
+        while(i < sl){
+            if(s[i] == w2[prev_lps]){
+                i++;
+                prev_lps++;
+            } 
+            else{
+                if(prev_lps == 0){
+                    i++;
+                }
+                else{
+                    prev_lps = lps[prev_lps - 1];
+                }
+            }
+            if(prev_lps % wl == 0){
+                ans = max(ans, prev_lps / wl);
+            }
+        }
+        return ans;
+        
     }
 };
