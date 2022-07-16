@@ -1,26 +1,31 @@
 
-typedef pair<int,int> p;
 class Solution {
 public:
-    int dp[1000000];
-    int dfs(int n){
-        if(n==1) 
-			return 1; 
-        if(dp[n]) 
-			return dp[n]; // if already computed
-        if(n&1) 
-			return dp[n] = 1+dfs(3*n+1); // if odd
-        return dp[n] = 1+dfs(n/2); // if even
-    }
-    int getKth(int l, int h, int k) {
-        priority_queue<p,vector<p>,greater<p>>q; // min heap of pairs
-        for(int i=l;i<=h;i++)
-            q.push({dfs(i),i}); // sort by power of the integer, if power equal then sort by it's value
-        int ans;
-        while(k--){
-            ans=q.top().second; 
-            q.pop();
+    struct greater_oper{
+        bool operator()(pair<int, int> &p1, pair<int, int> &p2){
+            if(p1.first == p2.first) return p1.second < p2.second;
+            else return p1.first < p2.first;            
         }
-        return ans;
+    };
+    
+    #define pis pair<int, int>
+    
+    int getKth(int lo, int hi, int k) {   
+        priority_queue<pis, vector<pis>, greater_oper> max_heap;
+        
+        for(int curr = lo; curr <= hi; curr++){
+            int value = curr, count = 0;
+            
+            while(value != 1){
+                if(value % 2 == 0) value /= 2;
+                else value = 3 * value + 1;
+                count++;
+            }
+            
+            max_heap.push({count, curr});
+            if(max_heap.size() > k) max_heap.pop();
+        }
+        
+        return max_heap.top().second;
     }
 };
